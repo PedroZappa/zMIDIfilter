@@ -32,7 +32,7 @@ fi
 source .venv/bin/activate
 
 # Start mididings with the filter script
-# mididings -f midi_filter.py
+# mididings -f app.py
 
 # Remove the colors script
 if [ -f "~/colors.sh" ]; then

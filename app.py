@@ -1,14 +1,27 @@
 from mididings import *
 
-# Configuration: Use ALSA as the audio backend
+# Configure Global Settings
 config(
-    backend='alsa',
+    backend='alsa', # Alsa Sequencer
+    # backend='jack', # Jack MIDI buffered
+    # backend='jack-rt', # Jack MIDI direct
+    client_name='zMidiFilter',
+    in_ports = [
+        ('MPK', '24:0')
+    ],
+    out_ports = [
+        ('zMIDIfilter OUT', '14:0'),
+    ],
 )
 
-# Define the MIDI routing and filtering logic
+def filterCCrelease(e):
+    if e.type == CTRL : 
+        if hasattr(e, 'value') and e.value == 0:
+            return None
+    # Allow all other messages
+    return e
+
 run(
-    Selector([
-        Filter(NOTEON),  # Pass only Note On messages
-       Filter(CTRL)     # Pass Control Change (CC) messages
-    ])
+    Process(filterCCrelease) >> Print()
 )
+

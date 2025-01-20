@@ -9,6 +9,7 @@ setup(
     install_requires=[
         "setuptools",
         "mididings",
+        "decorator",
     ],
     extras_require={
         "dev": ["debugpy", "black"],
