@@ -44,26 +44,31 @@ def get_mpk_ports():
         logging.error(f"Error fetching MPK mini 3 port: {e}")
         raise
 
-gateZero = False          # Global variable to toggle alternation
+blockNum = True
+blockZero = True
 
 def filterCC(e):
-    global gateZero  # Refer to the global `gate` variable
+    global blockNum
+    global blockZero
 
-    if e.type == CTRL and hasattr(e, 'value'): # Process only Control Change (CC) messages
-        if e.value > 0:  # Non-zero message
-            if not gateZero:
-                gateZero = False  # Toggle the gate to allow zero next
-                return e  # Pass the non-zero message
-            else:
-                gateZero = True # Toggle the gate to allow zero next
-                return None  # Block the non-zero message
-        elif e.value == 0:  # Zero message
-            if gateZero:
-                gateZero = False  # Toggle the gate to allow zero next
-                return e  # Pass the zero message
-            else:
-                gateZero = True  # Toggle the gate to allow non-zero next
-                return None  # Block the zero message
+    # Ignore Message alternating
+    if e.type == CTRL: 
+        if hasattr(e, 'value') and e.value == 0:
+            if not blockZero:
+                blockZero = not blockZero
+                return None # Ignore CC release (value == 0)
+        else:
+            if not blockNum:
+                blockNum = not blockNum
+                return None
+    # Adjust Toggle
+    if e.type == CTRL:
+        if hasattr(e, 'value') and e.value == 0:
+            blockZero = not blockZero
+        else:
+            blockNum = not blockNum
+
+
     # Allow all other messages
     return e
 
