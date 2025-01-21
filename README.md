@@ -2,7 +2,7 @@
 MIDI message Filter for MPK mini 3 (for use with RNBO)
 
 This Python script filters MIDI Messages.
-For the time being it only filters Control Change (CC) messages with a value of 0 from the MPK mini 3.
+- Alternates filtering Control Change (CC) messages with zero & non-zero values (to effectively implement a toggle);
 
 ## Requirements:
 - Python 3
